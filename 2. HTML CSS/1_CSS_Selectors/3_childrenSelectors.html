@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Children selectors</title>
+    
+    <style>
+        /* children selectors */
+        div>h1>span {   /* div>h1 span */
+            color:blue;
+        }
+    </style>
+
+</head>
+<body>
+    <!-- select "i am direct son" and make it blue -->
+    <div>
+        <h1>
+            <span>I am the direct son</span>
+        </h1>
+    </div>
+    <div>
+        <span>
+            <h1>
+                <span>I am the Indirect son</span>
+            </h1>
+        </span>
+    </div>
+</body>
+</html>

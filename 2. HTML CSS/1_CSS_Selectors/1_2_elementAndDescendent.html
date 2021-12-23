@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Element and descendent selectors</title>
+    <!-- Internal CSS -->
+    <style>
+        /* css selectors */
+        /* Element selectors */
+        h1{
+            color: red;
+        }
+        p{
+            color:blueviolet;
+        }
+        
+        /* descendent selectors */
+        div li{        /*div li and div ol is same in this  */
+            color: brown;
+        }
+    </style>
+</head>
+<body>
+    <!-- Inline css -->
+    <!-- <h1 style="color: red;">I am a paragraph help me to become h1</h1> -->
+    <h1 style="color: aqua;">I am a paragraph help me to become h1</h1>
+    <h1>I am a paragraph help me to become h1</h1>
+    <h1>I am a paragraph help me to become h1</h1>
+    <h1>I am a paragraph help me to become h1</h1>
+
+    <p style="color:chartreuse">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur, enim?</p>
+    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur, enim?</p>
+
+    <ol>
+        <li>i</li>
+        <li>am</li>
+        <li>kuldeep</li>
+    </ol>
+
+    <div>
+        <ol>
+            <li>select</li>
+            <li>me</li>
+        </ol>
+    </div>
+
+</body>
+</html>
