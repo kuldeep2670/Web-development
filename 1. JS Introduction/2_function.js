@@ -34,7 +34,7 @@ sayHi()
 // IIFE( Immedialtely Invoked Function Expression)
 
 let add = (function(a, b){
-    return a + b
+    return a + b     //console.log(a+b)
 })(10, 20)
 
 console.log(add)
