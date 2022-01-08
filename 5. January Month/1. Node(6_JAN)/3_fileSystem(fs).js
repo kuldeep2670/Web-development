@@ -1,8 +1,10 @@
 // // File system module
 
-//********** FILES ********//
+//******************************************** FILES *********************************************//
 
-const fs = require('fs')
+const fs = require('fs')  //file system module
+
+const path = require('path') // path module
 
 // //1. we will be reading writing updating and deleting files
 
@@ -30,7 +32,7 @@ const fs = require('fs')
 // console.log('f2 deleted')
 
 
-// // *******directories**************//
+// // ***********************************directories***************************************//
 
 // //create a directory
 // //mkdirSync method is used to create a new directory or folder
@@ -60,8 +62,24 @@ const fs = require('fs')
 // //isDirectory
 // console.log('isDirectory?', statsOfDirectory.isDirectory())
 
-//readdirSync
-//readdirSync is a method which is used to check content inside a directory
-let folderpath = 'E:\\Pepcoding\\web development\\5. January Month\\1. Node(6_JAN)\\myDirectory'
-let foldercontent = fs.readdirSync(folderpath)
-console.log('directory content : ' + foldercontent)
+// //readdirSync
+// //readdirSync is a method which is used to check content inside a directory
+// let folderpath = 'E:\\Pepcoding\\web development\\5. January Month\\1. Node(6_JAN)\\myDirectory'
+// let foldercontent = fs.readdirSync(folderpath)
+// console.log('directory content : ' + foldercontent)
+
+
+//Copying files
+
+let srcFilePath = 'E:\\Pepcoding\\web development\\5. January Month\\1. Node(6_JAN)\\myDirectory\\f2.txt'
+let destinationPath = 'E:\\Pepcoding\\web development\\5. January Month\\1. Node(6_JAN)\\myDirectory2'
+
+let toBeCopiedFileName = path.basename(srcFilePath)
+console.log(toBeCopiedFileName)
+
+let destPath = path.join(destinationPath, toBeCopiedFileName)
+console.log(destPath)
+
+fs.copyFileSync(srcFilePath, destPath)
+console.log('File copied')
+
