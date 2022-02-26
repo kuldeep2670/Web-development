@@ -3,6 +3,7 @@ let password = 'Kuldeep@123'
 const loginLink = "https://www.hackerrank.com/auth/login";
 
 let puppeteer = require('puppeteer')
+const codeFile = require('./code')
 //Puppeteer works on promises
 
 let page;
@@ -22,17 +23,60 @@ browserWillBeLaunchedPromise.then(function (browserInstance) {
     page = newTab
     let pageWillBeOpenedPromise = newTab.goto(loginLink)
     return pageWillBeOpenedPromise;
-    
-}).then(function(){
-    let typedEmailPromise = page.type("input[id = 'input-1']", email, {delay: 100})
+
+}).then(function () {
+    let typedEmailPromise = page.type("input[id = 'input-1']", email, { delay: 100 })
     return typedEmailPromise
 
- }).then(function(){
-     let typedPasswordPromise = page.type("input[id = 'input-2']", password, {delay: 100})
-     return typedPasswordPromise
+}).then(function () {
+    let typedPasswordPromise = page.type("input[id = 'input-2']", password, { delay: 100 })
+    return typedPasswordPromise
 
-}).then(function(){
-    let loginPromise = page.click("button[data-analytics='LoginPassword']", {delay: 100})
+}).then(function () {
+    let loginPromise = page.click("button[data-analytics='LoginPassword']", { delay: 100 })
     return loginPromise
 
+}).then(function(){
+    let algoWillBeClickedPromise = waitAndClick('.topic-card a[data-attr1="algorithms"]', page)
+    return algoWillBeClickedPromise;
+
+}).then(function(){
+    console.log('Algo Section Clicked')
+
+}).then(function(){
+    let getToWarmupPromise = waitAndClick('input[value="warmup"]', page)
+    return getToWarmupPromise
+
+}).then(function(){
+    let ChallengesArrPromise = page.$$('.ui-btn.ui-btn-normal.primary-cta.ui-btn-line-primary.ui-btn-styled', {delay: 100})
+    return ChallengesArrPromise
+}).then(function(questionsArr){
+    console.log("No. of Questions : " + questionsArr.length)
+
+    let questionWillBeSolvedPromise = questionSolver(page, questionsArr[0], codeFile.answers[0])
 })
+
+
+function waitAndClick(selector, cPage){
+    return new Promise(function(resolve, reject){
+        let waitForModalPromise = cPage.waitForSelector(selector);
+        waitForModalPromise.then(function(){
+            let clickModalPromise = cPage.click(selector, {delay:100})
+            return clickModalPromise
+        }).then(function(){
+            resolve()
+        }).catch(function(){
+            reject()
+        })
+    })
+}
+
+
+function questionSolver(page, question, answer){
+    return new Promise(function(resolve, reject){
+        let questionWillBeClickedPromise = question.click()
+        questionWillBeClickedPromise.then(function(){
+            console.log('question clicked')
+        })
+    })
+}
