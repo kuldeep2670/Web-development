@@ -121,12 +121,14 @@ body{
     justify-content: center;
     padding: 2rem;
     flex-wrap: wrap;
+    
 }
 
 .ticket-cont{
     height: 12rem;
     width: 15rem;
     background-color: #f1f2f6;
+    margin: 2rem;
     
 }
 
@@ -145,4 +147,16 @@ body{
     height: calc(100% - 1rem - 2rem);
     font-size: 1.5rem;
     padding: 5px;
+    outline: none;
+    overflow: scroll;
+    word-wrap: break-word;
+}
+
+.ticket-lock{
+
+    display: flex;
+    justify-content: flex-end;
+    background-color: #f1f2f6;
+    font-size: 2rem;
+    padding: 0.5rem;
 }
