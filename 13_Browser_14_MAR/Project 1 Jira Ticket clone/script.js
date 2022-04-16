@@ -20,6 +20,56 @@ let removeFlag = false;
 let lockClass = 'fa-lock'
 let unlockClass = 'fa-lock-open'
 
+let ticketsArr = []
+let toolBoxColors = document.querySelectorAll('.color')
+
+//gel all tickets form local storage
+
+if(localStorage.getItem('tickets')){
+    ticketsArr = JSON.parse(localStorage.getItem('tickets'))
+    ticketsArr.forEach(function(ticket){
+        createTicket(ticket.ticketColor, ticket.ticketTask, ticket.ticketID)
+    })
+}
+
+//Filter tickets with respect to colors
+for(let i = 0; i < toolBoxColors.length; i++){
+    toolBoxColors[i].addEventListener('click', function(e){
+        let currentToolBoxColor = toolBoxColors[i].classList[0]
+        //console.log(currentToolBoxColor)
+
+        let filteredTickets = ticketsArr.filter(function(ticketobj){
+            return currentToolBoxColor === ticketobj.ticketColor
+        })
+
+        //remove previous tickets
+        let allTickets = document.querySelectorAll('.ticket-cont')
+        for(let i = 0; i < allTickets.length; i++){
+            allTickets[i].remove()
+        }
+
+
+        filteredTickets.forEach(function(filteredObj){
+            createTicket(filteredObj.ticketColor, filteredObj.ticketTask, filteredObj.ticketID)
+            
+        })
+    });
+
+    toolBoxColors[i].addEventListener('dblclick', function(e){
+        let allTickets = document.querySelectorAll('.ticket-cont')
+        for(let i = 0; i < allTickets.length; i++){
+            allTickets[i].remove()
+        }
+
+        ticketsArr.forEach(function(ticketobj){
+            createTicket(ticketobj.ticketColor, ticketobj.ticketTask, ticketobj.ticketID)
+        })
+    })
+
+}
+
+
+
 addBtn.addEventListener("click", function (e) {
     //display the modal
     //addFalg, true - modal display
@@ -49,30 +99,37 @@ allPriorityColors.forEach(function (colorElem) {
 modalCont.addEventListener("keydown", function (e) {
     let key = e.key;
     if (key == "Shift") {
-        createTicket(modalPriorityColor, taskAreaCont.value, shortid()); //this function will generate the ticket
+        createTicket(modalPriorityColor, taskAreaCont.value); //this function will generate the ticket
         modalCont.style.display = "none";
         addFlag = false;
         taskAreaCont.value = "";
     }
 });
 
-function createTicket(ticketKaColorClass, task, ticketId) {
+function createTicket(ticketColor, ticketTask, ticketID) {
+    let id = ticketID || shortid()
     let ticketCont = document.createElement("div");
     ticketCont.setAttribute("class", "ticket-cont");
 
-    ticketCont.innerHTML = `<div class="ticket-color ${ticketKaColorClass}"></div>
-    <div class="ticket-id">#${ticketId}</div>
-    <div class="task-area">${task}</div>
+    ticketCont.innerHTML = `<div class="ticket-color ${ticketColor}"></div>
+    <div class="ticket-id">#${id}</div>
+    <div class="task-area">${ticketTask}</div>
     <div class="ticket-lock">
         <i class="fa-solid fa-lock"></i>
     </div>`;
 
     mainCont.appendChild(ticketCont);
-    handleRemoval(ticketCont);
+    handleRemoval(ticketCont, id);
 
     handleLock(ticketCont)
 
-    handleColor(ticketCont)
+    handleColor(ticketCont, id)
+
+    if(!ticketID){
+        ticketsArr.push({ticketColor, ticketTask, ticketID:id})
+        localStorage.setItem('tickets', JSON.stringify(ticketsArr))
+    }
+    
 }
 
 removeBtn.addEventListener("click", function () {
@@ -85,11 +142,19 @@ removeBtn.addEventListener("click", function () {
 });
 
 //Remove Ticket Function
-function handleRemoval(ticket) {
+function handleRemoval(ticket, id) {
     ticket.addEventListener("click", function () {
-        if (removeFlag == true) {
-            ticket.remove();
-        }
+        if (!removeFlag) return
+        
+        let idx = getTicketIdx(id)  //idx
+
+        //local storage removal of ticket
+        ticketsArr.splice(idx, 1)
+
+        let strTicketArray = JSON.stringify(ticketsArr)
+        localStorage.setItem('tickets', strTicketArray)
+        ticket.remove();
+        
     });
 }
 
@@ -113,11 +178,13 @@ function handleLock(ticket){
     })
 }
 
-function handleColor(ticket){
+function handleColor(ticket, id){
     let ticketColorBand = ticket.querySelector('.ticket-color')
 
     ticketColorBand.addEventListener('click', function(e){
         let currentTicketColor = ticketColorBand.classList[1]
+
+        let ticketIdx = getTicketIdx(id)
 
         let currentTicketColoridx = colors.findIndex(function(color){
             return currentTicketColor === color
@@ -129,10 +196,20 @@ function handleColor(ticket){
 
         ticketColorBand.classList.remove(currentTicketColor)
         ticketColorBand.classList.add(newTicketColor)
+
+         // modify with new color
+
+        ticketsArr[ticketIdx].ticketColor = newTicketColor
+        localStorage.setItem('tickets' , JSON.stringify(ticketsArr))
     })
 }
 
-
+function getTicketIdx(id){
+    let ticketIdx = ticketsArr.findIndex(function(ticketObj){
+        return ticketObj.ticketID == id
+    })
+    return ticketIdx
+}
 
 
 
