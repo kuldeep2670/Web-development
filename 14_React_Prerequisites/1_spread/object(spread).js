@@ -11,7 +11,7 @@ let obj = {
 
 //let obj2 = {...obj} //it spreads only single nested elements
 
-//let obj2 = {...obj , address: {...obj.address.state}}  //shallow copy
+//let obj2 = {...obj , address: {...obj.address, state: {...obj.address.state}} }  //shallow copy
 
 let obj2 = JSON.parse(JSON.stringify(obj))    //deep copy
 
