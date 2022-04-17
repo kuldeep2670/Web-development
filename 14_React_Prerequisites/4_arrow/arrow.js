@@ -45,6 +45,7 @@
 // person.showDetailsArrow()
 
 //arrow function remove the use of this 
+//syntax is easy to write
 
 
 
