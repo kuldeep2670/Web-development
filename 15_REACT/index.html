@@ -27,13 +27,39 @@
 
 
         //<-----------JSX--------------->
-        function Element() {             //component name starts with capital letter
-            return (                     //  ==> Functional Component
-                <h1>Hello</h1>
+        function Child({ name = "Kuldeep", age, marks }) {             //component name starts with capital letter
+            return (                                     //  ==> Functional Component
+                <>
+                    <h1>Hello {name}</h1>
+                    <h2>{marks}</h2>
+                    <h3>{age}</h3>
+
+                </>
             );
         }
 
-        ReactDOM.render(<Element />, document.getElementById("root"))
+        function Child2({ place }) {
+            return (
+                <h1>Goodbye {place}</h1>
+            )
+        }
+
+        function Parent() {
+            return (
+                // <Child />
+
+                //for more than one child
+                //<React.Fragment>...</React.Fragment>  or simply <>....</>  or <div>....</div>
+                <>
+                    <Child age="20" marks="86" />
+                    <Child2 place="Delhi" />
+                    <Child name="singh" />
+                    <Child2 />
+                </>
+
+            )
+        }
+        ReactDOM.render(<Parent />, document.getElementById("root"))
 
 
 
