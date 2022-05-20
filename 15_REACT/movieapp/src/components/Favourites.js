@@ -3,6 +3,14 @@ import React, { Component } from 'react'
 import { movies } from '../movieData'
 
 export class Favourites extends Component {
+
+  constructor(){
+    super()
+    this.state={
+      genres: [],
+      currgenre: 'All genres'
+    }
+  }
   render() {
     const moviesArr = movies.results;
     //console.log(moviesArr);
@@ -27,17 +35,30 @@ export class Favourites extends Component {
       10752: "War",
       37: "Western",
     };
+
+    let tempArr = []
+    moviesArr.map((movieObj) => {
+      if(!tempArr.includes(genreids[movieObj.genre_ids[0]])){
+        tempArr.push(genreids[movieObj.genre_ids[0]])
+      }
+    })
+    //console.log(tempArr)
+    tempArr.unshift('All genres')
+
     return (
       <>
         <div className='main'>
           <div className='row'>
             <div className='col-3'>
-              <ul class="list-group genre-selector">
-                <li class="list-group-item">Favourites</li>
-                <li class="list-group-item">Action</li>
-                <li class="list-group-item">Action</li>
-                <li class="list-group-item">Action</li>
-                <li class="list-group-item">Action</li>
+              <ul className="list-group genre-selector">
+                {/* <li class="list-group-item active">All Genres</li> */}
+                {
+                  tempArr.map((genre)=>(
+                    this.state.currgenre == genre ? 
+                    <li style={{background: '#3f51b5', color: 'white', fontWeight:'bold'}} className="list-group-item">{genre}</li> :
+                    <li style={{ color:'#3f51b5' }}className="list-group-item">{genre}</li>
+                  ))
+                }
               </ul>
             </div>
 
@@ -58,15 +79,15 @@ export class Favourites extends Component {
                       <th scope="col">Popularity</th>
                       <th scope="col">Rating</th>
                       <th scope="col"></th>
-                      
-                      
+
+
                     </tr>
                   </thead>
                   <tbody>
                     {
                       moviesArr.map((movieElem) => (
                         <tr>
-                          <td><img style ={{width:'6rem'}} src ={`https://image.tmdb.org/t/p/original${movieElem.backdrop_path}`} /></td>
+                          <td><img style={{ width: '6rem' }} src={`https://image.tmdb.org/t/p/original${movieElem.backdrop_path}`} /></td>
                           <th scope="row">{movieElem.title}</th>
                           <td>{genreids[movieElem.genre_ids[0]]}</td>
                           <td>{movieElem.popularity}</td>
