@@ -4,15 +4,65 @@ import { movies } from '../movieData'
 
 export class Favourites extends Component {
 
-  constructor(){
+  constructor() {
     super()
-    this.state={
+    this.state = {
       genres: [],
-      currgenre: 'All genres'
+      currgenre: 'All genres',
+      currText: '',
+      movies: [],
     }
   }
+
+  componentDidMount() {
+
+    let genreids = {
+      28: "Action",
+      12: "Adventure",
+      16: "Animation",
+      35: "Comedy",
+      80: "Crime",
+      99: "Documentary",
+      18: "Drama",
+      10751: "Family",
+      14: "Fantasy",
+      36: "History",
+      27: "Horror",
+      10402: "Music",
+      9648: "Mystery",
+      10749: "Romance",
+      878: "Sci-Fi",
+      10770: "TV",
+      53: "Thriller",
+      10752: "War",
+      37: "Western",
+    };
+
+    let data = JSON.parse(localStorage.getItem('movies-app') || '[]')
+    let tempArr = [];
+    data.map((movieObj) => {
+      if (!tempArr.includes(genreids[movieObj.genre_ids[0]])) {
+        tempArr.push(genreids[movieObj.genre_ids[0]])
+      }
+    })
+    tempArr.unshift('All genres');
+
+    this.setState({
+      movies: [...data],
+      genres: [...tempArr],
+    })
+  }
+
+  handleGenreChange = (genre) => {
+    this.setState({
+      currgenre: genre
+    })
+  }
+
+
+
   render() {
-    const moviesArr = movies.results;
+    // const moviesArr = movies.results;
     //console.log(moviesArr);
     let genreids = {
       28: "Action",
@@ -36,14 +86,26 @@ export class Favourites extends Component {
       37: "Western",
     };
 
-    let tempArr = []
-    moviesArr.map((movieObj) => {
-      if(!tempArr.includes(genreids[movieObj.genre_ids[0]])){
-        tempArr.push(genreids[movieObj.genre_ids[0]])
-      }
-    })
-    //console.log(tempArr)
-    tempArr.unshift('All genres')
+    let filterArr = [];
+
+    if (this.state.currText === '') {
+      filterArr = this.state.movies
+    }
+
+    else {
+      filterArr = this.state.movies.filter((movieObj) => {
+        let title = movieObj.original_title.toLowerCase();
+        return title.includes(this.state.currText.toLowerCase().trim())
+      })
+    }
+
+
+    if (this.state.currgenre !== 'All genres') {
+      filterArr = this.state.movies.filter((movieObj) => genreids[movieObj.genre_ids[0]] == this.state.currgenre)
+    }
+
+    //console.log(this.state.currText)
+
 
     return (
       <>
@@ -53,10 +115,10 @@ export class Favourites extends Component {
               <ul className="list-group genre-selector">
                 {/* <li class="list-group-item active">All Genres</li> */}
                 {
-                  tempArr.map((genre)=>(
-                    this.state.currgenre == genre ? 
-                    <li style={{background: '#3f51b5', color: 'white', fontWeight:'bold'}} className="list-group-item">{genre}</li> :
-                    <li style={{ color:'#3f51b5' }}className="list-group-item">{genre}</li>
+                  this.state.genres.map((genre) => (
+                    this.state.currgenre == genre ?
+                      <li style={{ background: '#3f51b5', color: 'white', fontWeight: 'bold' }} className="list-group-item">{genre}</li> :
+                      <li style={{ color: '#3f51b5' }} className="list-group-item" onClick={() => this.handleGenreChange(genre)} >{genre}</li>
                   ))
                 }
               </ul>
@@ -64,7 +126,7 @@ export class Favourites extends Component {
 
             <div className='col-9 favourites-table'>
               <div className='row'>
-                <input placeholder='Search' type='text' className='input-group-text col' />
+                <input placeholder='Search' type='text' className='input-group-text col' value={this.state.currText} onChange={(e) => this.setState({ currText: e.target.value })} />
                 <input type='number' className='input-group-text col' />
               </div>
 
@@ -85,14 +147,14 @@ export class Favourites extends Component {
                   </thead>
                   <tbody>
                     {
-                      moviesArr.map((movieElem) => (
+                      filterArr.map((movieElem) => (
                         <tr>
                           <td><img style={{ width: '6rem' }} src={`https://image.tmdb.org/t/p/original${movieElem.backdrop_path}`} /></td>
                           <th scope="row">{movieElem.title}</th>
                           <td>{genreids[movieElem.genre_ids[0]]}</td>
                           <td>{movieElem.popularity}</td>
                           <td>{movieElem.vote_average}</td>
-                          <td><button type="button" class="btn btn-danger">Delete</button></td>
+                          <td><button type="button" className="btn btn-danger">Delete</button></td>
                         </tr>
                       ))
                     }
